@@ -1,16 +1,11 @@
 package com.cali.justboard.dto;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
-
-public record ArticleDto(
-        LocalDateTime createdAt,
-        String createdBy,
+public record ArticleUpdateDto(
         String title,
         String content,
         String hashtag
-) implements Serializable {
-    public static ArticleDto of(LocalDateTime createdAt, String createdBy, String title, String content, String hashtag) {
-        return new ArticleDto(createdAt, createdBy, title, content, hashtag);
+) {
+    public static ArticleUpdateDto of(String title, String content, String hashtag) {
+        return new ArticleUpdateDto(title, content, hashtag);
     }
 }
