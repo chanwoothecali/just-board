@@ -24,14 +24,14 @@ public class ArticleComment extends BaseEntity {
 
     @Setter @Column(nullable = false, length = 500) private String content; // 본문
 
-    private ArticleComment(UserAccount userAccount, Article article, String content) {
-        this.userAccount = userAccount;
+    private ArticleComment(Article article, UserAccount userAccount, String content) {
         this.article = article;
+        this.userAccount = userAccount;
         this.content = content;
     }
 
-    public static ArticleComment of(UserAccount userAccount, Article article, String content) {
-        return new ArticleComment(userAccount, article, content);
+    public static ArticleComment of(Article article, UserAccount userAccount, String content) {
+        return new ArticleComment(article, userAccount, content);
     }
 
     @Override
