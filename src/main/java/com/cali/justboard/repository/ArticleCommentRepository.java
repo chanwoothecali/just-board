@@ -28,5 +28,6 @@ public interface ArticleCommentRepository extends
         bindings.bind(root.createdBy).first(StringExpression::containsIgnoreCase);
     }
 
+    // 연관관계 매핑 되어있는 article의 id에 접근하기 위해 스네이크케이스 사용
     List<ArticleComment> findByArticle_Id(Long articleId);
 }
