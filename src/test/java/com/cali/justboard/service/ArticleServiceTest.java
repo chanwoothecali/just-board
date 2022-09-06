@@ -54,14 +54,14 @@ class ArticleServiceTest {
         SearchType searchType = SearchType.TITLE;
         String searchKeyword = "title";
         Pageable pageable = Pageable.ofSize(20);
-        given(articleRepository.findByTitle(searchKeyword, pageable)).willReturn(Page.empty());
+        given(articleRepository.findByTitleContaining(searchKeyword, pageable)).willReturn(Page.empty());
 
         // When
         Page<ArticleDto> articles = sut.searchArticles(searchType, searchKeyword, pageable);
 
         // Then
         assertThat(articles).isEmpty();
-        then(articleRepository).should().findByTitle(searchKeyword, pageable);
+        then(articleRepository).should().findByTitleContaining(searchKeyword, pageable);
     }
 
     @DisplayName("게시글을 조회하면, 게시글을 반환한다.")
@@ -104,7 +104,6 @@ class ArticleServiceTest {
     @Test
     void givenArticleInformation_thenSaveArticle() {
         // Given
-        given(articleRepository.save(any(Article.class))).willReturn(null);
         ArticleDto dto = createArticleDto();
         given(articleRepository.save(any(Article.class))).willReturn(createArticle());
 
@@ -119,10 +118,9 @@ class ArticleServiceTest {
     @Test
     void givenArticleModifyInformation_thenUpdateArticle() {
         // Given
-        given(articleRepository.save(any(Article.class))).willReturn(null);
         Article article = createArticle();
         ArticleDto dto = createArticleDto("새 타이틀", "새 내용", "#springboot");
-        given(articleRepository.getReferenceById(dto.id())).willReturn(article);
+        given(articleRepository.getReferenceById(dto.id())).willReturn(article); // findById와 매커니즘이 다르다.
 
         // When
         sut.updateArticle(dto);
