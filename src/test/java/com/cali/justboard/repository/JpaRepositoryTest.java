@@ -2,6 +2,7 @@ package com.cali.justboard.repository;
 
 import com.cali.justboard.config.JpaConfig;
 import com.cali.justboard.domain.Article;
+import com.cali.justboard.domain.UserAccount;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +22,16 @@ class JpaRepositoryTest {
 
     private ArticleRepository articleRepository;
     private ArticleCommentRepository articleCommentRepository;
+    private UserAccountRepository userAccountRepository;
 
     public JpaRepositoryTest(
             @Autowired ArticleRepository articleRepository,
-            @Autowired ArticleCommentRepository articleCommentRepository
+            @Autowired ArticleCommentRepository articleCommentRepository,
+            @Autowired UserAccountRepository userAccountRepository
     ) {
         this.articleRepository = articleRepository;
         this.articleCommentRepository = articleCommentRepository;
+        this.userAccountRepository = userAccountRepository;
     }
 
     @DisplayName("select 테스트")
@@ -49,9 +53,11 @@ class JpaRepositoryTest {
     public void insert_test() throws Exception {
         // given
         long previousArticleCount = articleRepository.count();
+        UserAccount userAccount = userAccountRepository.save(UserAccount.of("cali", "pw", null, null, null));
+        Article article = Article.of(userAccount, "new Article", "test", null);
 
         // when
-        Article article = articleRepository.save(Article.of("new Article", "test", null));
+        Article savedArticle = articleRepository.save(article);
 
         // then
         assertThat(articleRepository.count()).isEqualTo(124);
