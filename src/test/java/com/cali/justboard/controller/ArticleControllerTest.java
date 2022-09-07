@@ -4,6 +4,7 @@ import com.cali.justboard.config.SecurityConfig;
 import com.cali.justboard.dto.ArticleWithCommentsDto;
 import com.cali.justboard.dto.UserAccountDto;
 import com.cali.justboard.service.ArticleService;
+import com.cali.justboard.service.PaginationService;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -35,6 +37,8 @@ class ArticleControllerTest {
 
     @MockBean // MockBean은 파라미터로 넣을 수 없어서 이건 어쩔 수 없이 필드 주입...
     private ArticleService articleService;
+    @MockBean
+    private PaginationService paginationService;
 
     // test에서는 @Autowired를 꼭 명시해주어야 한다.
     public ArticleControllerTest(@Autowired MockMvc mvc) {
@@ -46,15 +50,17 @@ class ArticleControllerTest {
     public void get_articles_view() throws Exception {
         // given
         given(articleService.searchArticles(eq(null), eq(null), any(Pageable.class))).willReturn(Page.empty());
+        given(paginationService.getPaginationBarNumbers(anyInt(), anyInt())).willReturn(List.of(0, 1, 2, 3, 4));
 
         // when & then
         mvc.perform(get("/articles"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
                 .andExpect(view().name("articles/index"))
-                .andExpect(model().attributeExists("articles"));
-
+                .andExpect(model().attributeExists("articles"))
+                .andExpect(model().attributeExists("paginationBarNumbers"));
         then(articleService).should().searchArticles(eq(null), eq(null), any(Pageable.class));
+        then(paginationService).should().getPaginationBarNumbers(anyInt(), anyInt());
     }
 
     @DisplayName("게시글 상세 페이지 - 정상 호출")
