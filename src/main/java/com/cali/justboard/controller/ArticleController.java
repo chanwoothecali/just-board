@@ -39,6 +39,7 @@ public class ArticleController {
 
         map.addAttribute("articles", articleResponses);
         map.addAttribute("paginationBarNumbers", paginationBarNumbers);
+
         return "articles/index";
     }
 
@@ -47,6 +48,7 @@ public class ArticleController {
         ArticleWithCommentsResponse article = ArticleWithCommentsResponse.from(articleService.getArticle(articleId));
         map.addAttribute("article", article);
         map.addAttribute("articleComments", article.articleCommentsResponses());
+        map.addAttribute("totalCount", articleService.getArticleCount());
 
         return "articles/detail";
     }
