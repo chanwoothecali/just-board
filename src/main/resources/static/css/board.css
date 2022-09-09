@@ -1,3 +1,4 @@
+/* search-bar */
 .widget-26 {
   color: #3c4142;
   font-weight: 400;
@@ -247,4 +248,11 @@
     background-clip: border-box;
     border: 1px solid #e6e4e9;
     border-radius: 8px;
+}
+
+/* table */
+/* 게시글 테이블 제목 */
+#article-table > thead a {
+  text-decoration: none;
+  color: black;
 }
