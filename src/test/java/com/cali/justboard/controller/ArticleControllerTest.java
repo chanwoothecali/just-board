@@ -1,6 +1,7 @@
 package com.cali.justboard.controller;
 
 import com.cali.justboard.config.SecurityConfig;
+import com.cali.justboard.domain.type.SearchType;
 import com.cali.justboard.dto.ArticleWithCommentsDto;
 import com.cali.justboard.dto.UserAccountDto;
 import com.cali.justboard.service.ArticleService;
@@ -83,17 +84,28 @@ class ArticleControllerTest {
         then(articleService).should().getArticleCount();
     }
 
-    @Disabled("구현 중")
     @DisplayName("게시글 검색 페이지 - 정상 호출")
     @Test
-    public void get_articles_search_view() throws Exception {
+    public void givenSearchKeyword_whenSearchingInView_thenReturnSearchedArticles() throws Exception {
         // given
+        SearchType searchType = SearchType.TITLE;
+        String searchValue = "title";
+        given(articleService.searchArticles(eq(searchType), eq(searchValue), any(Pageable.class))).willReturn(Page.empty());
+        given(paginationService.getPaginationBarNumbers(anyInt(), anyInt())).willReturn(List.of(0, 1, 2, 3, 4));
 
         // when & then
-        mvc.perform(get("/articles/search"))
+        mvc.perform(
+                        get("/articles")
+                                .queryParam("searchType", searchType.name())
+                                .queryParam("searchValue", searchValue)
+                )
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
-                .andExpect(model().attributeExists("articles/search"));
+                .andExpect(view().name("articles/index"))
+                .andExpect(model().attributeExists("articles"))
+                .andExpect(model().attributeExists("searchTypes"));
+        then(articleService).should().searchArticles(eq(searchType), eq(searchValue), any(Pageable.class));
+        then(paginationService).should().getPaginationBarNumbers(anyInt(), anyInt());
     }
 
     @Disabled("구현 중")
