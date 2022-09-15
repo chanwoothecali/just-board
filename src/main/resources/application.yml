@@ -1,4 +1,4 @@
-ebug: false
+debug: false
 management.endpoints.web.exposure.include: "*"
 
 logging:
