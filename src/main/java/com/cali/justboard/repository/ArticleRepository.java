@@ -2,6 +2,7 @@ package com.cali.justboard.repository;
 
 import com.cali.justboard.domain.Article;
 import com.cali.justboard.domain.QArticle;
+import com.cali.justboard.repository.querydsl.ArticleRepositoryCustom;
 import com.querydsl.core.types.dsl.DateTimeExpression;
 import com.querydsl.core.types.dsl.StringExpression;
 import org.springframework.data.domain.Page;
@@ -16,7 +17,8 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 public interface ArticleRepository extends
         JpaRepository<Article, Long>,
         QuerydslPredicateExecutor<Article>, // Entity에 대한 기본 검색 기능 추가
-        QuerydslBinderCustomizer<QArticle> // 부분 검색
+        QuerydslBinderCustomizer<QArticle>, // 부분 검색
+        ArticleRepositoryCustom
 {
     Page<Article> findByTitleContaining(String title, Pageable pageable);
     Page<Article> findByContentContaining(String content, Pageable pageable);
