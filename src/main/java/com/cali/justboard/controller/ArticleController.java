@@ -24,6 +24,7 @@ import java.util.List;
 @Controller
 public class ArticleController {
 
+
     private final ArticleService articleService;
     private final PaginationService paginationService;
 
